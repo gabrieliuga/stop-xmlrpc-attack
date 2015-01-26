@@ -27,6 +27,10 @@ Make sure your .htaccess file is writable by the web server. Then just install t
 
 In multisite environments, it is in your network admin. You have to be super admin to access it.
 
+== Screenshots ==
+
+1. This is what your .htaccess might look like.
+
 == Changelog ==
 
 = 1.0 =
