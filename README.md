@@ -58,7 +58,7 @@ and when pushing the "update" button in admin.
 Trigger this action to remove our block from the .htaccess file.
 This action is triggered at plugin deactivation.
 
-	do_action( 'stop_xmlrpc_attack_generate_htaccess' );
+	do_action( 'stop_xmlrpc_attack_remove_htaccess' );
 
 
 ### action: stop_xmlrpc_attack_flush_cache ###
