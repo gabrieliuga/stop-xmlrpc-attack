@@ -21,6 +21,16 @@ make test || exit 1;
 # Let's begin...
 echo "Preparing to deploy wordpress plugin..."
 
+if [ "$(git branch)" != "* master" ]; then
+	echo "You must be in your master bransch to deploy. (Tests should run from master branch, to make sure you merged everything into it.)"
+	exit 1;
+fi
+
+if [ "$(git status | grep "Your branch is ahead of")" != "" ]; then
+	echo "Commit and push all your changes before doing the deploy (just to check there is no unmerged code at your remote).";
+	exit 1;
+fi
+
 if [ "$(git status | grep "Changes not staged for commit")" != "" ]; then
 	echo "Everything is not staged and committed to Git.";
 	exit 1;
