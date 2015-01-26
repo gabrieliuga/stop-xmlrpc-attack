@@ -9,7 +9,7 @@
 **License:** GPLv3 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-3.0.html  
 
-Block access to your xmlrpc.php, except for JetPack and Automattic. Will poll ARIN for Automattic's subnets and update your .htaccess accordingly.
+Block all access to your xmlrpc.php, except for JetPack and Automattic. Will poll ARIN for Automattic's subnets and update your .htaccess.
 
 ## Description ##
 
@@ -21,7 +21,7 @@ This WordPress plugin will block access to xmlrpc.php from everywhere, except th
 
 Make sure your .htaccess file is writable by the web server. Then just install the plugin, and it will live out of the box.
 
-## Questions & Answers ##
+## Frequently Asked Questions ##
 
 ### I can not find the plugin's admin page. ###
 
@@ -88,6 +88,4 @@ The string which marks the ending of our block in .htaccess.
 ### filter: stop_xmlrpc_attack_htaccess_block ###
 
 The very content in our .htaccess block.
-
-
 
