@@ -4,6 +4,7 @@ help:
 	# make installtestenv - Install unit testing environment.
 	# make test           - Run unit tests.
 	# make clean          - Remove build and test junk from filesystem.
+	# make deploy         - Deplol.
 	#
 	# Requirements for everything to work:
 	# * composer - Check out https://getcomposer.org/
@@ -24,6 +25,9 @@ installtestenv: deps
 
 test:
 	vendor/bin/phpunit
+
+deploy:
+	bin/deploy.sh
 
 clean:
 	rm -Rf vendor composer.lock
