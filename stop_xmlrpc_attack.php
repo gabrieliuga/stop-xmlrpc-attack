@@ -23,16 +23,11 @@ class Plugin_Stop_Xmlrpc_Attack {
 
 */
 
-	private $cidr;
-	private $files;
-	private $htaccessFile;
-	private $arin_orgs;
+	public $htaccessFile;
 	private $beginHtaccessBlock = '# BEGIN WORDPRESS PLUGIN stop_xmlrpc_attack';
 	private $endHtaccessBlock = '# END WORDPRESS PLUGIN stop_xmlrpc_attack';
 
 	function __construct() {
-		$this->htaccessFile = rtrim(ABSPATH, '/') . '/.htaccess';
-
 		register_activation_hook( __FILE__, array( 'Plugin_Stop_Xmlrpc_Attack', 'activated_plugin' ) );
 		register_deactivation_hook( __FILE__, array( 'Plugin_Stop_Xmlrpc_Attack', 'deactivated_plugin' ) );
 		add_action('stop_xmlrpc_attack_generate_htaccess', array($this, 'generate_htaccess'));
@@ -40,10 +35,19 @@ class Plugin_Stop_Xmlrpc_Attack {
 		add_action('stop_xmlrpc_attack_cron', array($this, 'cron'));
 		add_action('stop_xmlrpc_attack_flush_cache', array($this, 'flush_cache'));
 
+		add_action('init', array($this, 'init'));
+		add_action('admin_init', array($this, 'admin_init'));
 		add_action( 'admin_notices', array($this, 'admin_notice') );
 		add_action( 'network_admin_notices', array($this, 'admin_notice') );
-		add_action('init', array($this, 'admin_init'));
+
 	}
+
+	function init() {
+		$this->htaccessFile = rtrim(ABSPATH, '/') . '/.htaccess';
+		$this->beginHtaccessBlock = apply_filters('stop_xmlrpc_attack_begin_block', $this->beginHtaccessBlock);
+		$this->endHtaccessBlock = apply_filters('stop_xmlrpc_attack_end_block', $this->endHtaccessBlock);
+	}
+
 
 	/**
 	 * ACTIVATE/DEACTIVATE PLUGIN
@@ -229,31 +233,28 @@ class Plugin_Stop_Xmlrpc_Attack {
 	}
 
 	function generate_htaccess() {
-		$this->files = apply_filters('stop_xmlrpc_attack_on_file', array('xmlrpc.php'));
-		$this->arin_orgs = apply_filters('stop_xmlrpc_attack_whitelist_arin_organizations', array('AUTOM-93'));
-		$this->cidr = array('10.0.0.0/8', '127.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16'); // Hard coded local nets and loopback.
+		$files = apply_filters('stop_xmlrpc_attack_on_file', array('xmlrpc.php'));
+		$arin_orgs = apply_filters('stop_xmlrpc_attack_whitelist_arin_organizations', array('AUTOM-93'));
+		$cidr = array('10.0.0.0/8', '127.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16'); // Hard coded local nets and loopback.
 		
-		foreach ($this->arin_orgs as $arin_org) {
+		foreach ($arin_orgs as $arin_org) {
 			$data = $this->get_arin_organization_data($arin_org);
 			if (isset($data['nets']) && isset($data['nets']['netRef'])) {
 				foreach ($data['nets']['netRef'] as $subnet) {
 					$start = $subnet['@startAddress'];
 					$end = $subnet['@endAddress'];
 					if ($this->is_ipv4addr($start) && $this->is_ipv4addr($end)) {
-						$cidr = $this->range2cidr($start, $end);
+						$c = $this->range2cidr($start, $end);
 						if (!is_null($cidr)) {
-							$this->cidr[] = $cidr;
+							$cidr[] = $c;
 						}
 					}
 				}
 			}
 		}
 
-		natsort($this->cidr);
-		$this->cidr = apply_filters('stop_xmlrpc_attack_whitelist_cidrs', array_values($this->cidr));
-
-		$this->beginHtaccessBlock = apply_filters('stop_xmlrpc_attack_begin_block', $this->beginHtaccessBlock);
-		$this->endHtaccessBlock = apply_filters('stop_xmlrpc_attack_end_block', $this->endHtaccessBlock);
+		natsort($cidr);
+		$cidr = apply_filters('stop_xmlrpc_attack_whitelist_cidrs', array_values($cidr));
 
 		$htaccess = $this->get_current_htaccess();
 
@@ -262,12 +263,12 @@ class Plugin_Stop_Xmlrpc_Attack {
 		
 		// Generate current block as it should be
 		$newHtaccessBlock = '';
-		foreach ($this->files as $file) {
+		foreach ($files as $file) {
 			$newHtaccessBlock .= '<Files "' . $file . '">' . "\n";
 			$newHtaccessBlock .= "order deny,allow\n";
 			$newHtaccessBlock .= "deny from all\n";
-			foreach ($this->cidr as $cidr) {
-				$newHtaccessBlock .= 'allow from ' . $cidr . "\n";
+			foreach ($cidr as $c) {
+				$newHtaccessBlock .= 'allow from ' . $c . "\n";
 			}
 			$newHtaccessBlock .= "</Files>";
 		}
