@@ -21,6 +21,7 @@ make test || exit 1;
 # Let's begin...
 echo "Preparing to deploy wordpress plugin..."
 
+# Testing git repo state:
 if [ "$(git branch)" != "* master" ]; then
 	echo "You must be in your master bransch to deploy. (Tests should run from master branch, to make sure you merged everything into it.)"
 	exit 1;
@@ -40,6 +41,14 @@ if [ "$(git status | grep "Changes to be committed")" != "" ]; then
 	echo "Everything is not committed to Git.";
 	exit 1;
 fi
+
+# Test license:
+if [ "$(cat $MAINFILE | grep ^License: | sed 's/^[^ ]* //')" != "$(cat composer.json | grep '"license": "' | sed 's/^[^:]*: "//' | sed 's/",$//')" ]; then
+	echo "License in $MAINFILE does not match license in composer.json."
+	exit 1;
+fi
+
+exit
 
 # Make sure the plugin URL matches the slug, so nothing is fucked up.
 if [ "$(cat $MAINFILE | grep "Plugin URI: http://wordpress.org/extend/plugins/$PLUGINSLUG/")" = "" ]; then

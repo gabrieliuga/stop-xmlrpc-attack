@@ -1,10 +1,11 @@
 {
-    "name": "alfreddatakillen/stop_xmlrpc_attack",
-    "description": "Stop XML-RPC Attack",
-    "homepage": "https://github.com/alfreddatakillen/stop_xmlrpc_attack.git",
-    "type": "wordpress-plugin",
-    "extra": {
-    },
+	"name": "alfreddatakillen/stop_xmlrpc_attack",
+	"description": "Stop XML-RPC Attack",
+	"license": "GPLv2",
+	"homepage": "https://github.com/alfreddatakillen/stop_xmlrpc_attack.git",
+	"type": "wordpress-plugin",
+	"extra": {
+	},
 	"require-dev": {
 		"phpunit/phpunit": "*",
 		"wp-cli/wp-cli": "*",
