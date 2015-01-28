@@ -96,19 +96,22 @@ echo "Creating local copy of SVN repo ..."
 svn co $SVNURL $SVNPATH
 
 echo "Clearing svn repo so we can overwrite it"
-svn rm $SVNPATH/trunk/*
+rm -Rf $SVNPATH/trunk/*
 
 echo "Exporting the HEAD of master from git to the trunk of SVN"
 git checkout-index -a -f --prefix=$SVNPATH/trunk/
 
-echo "Ignoring github specific files and deployment script"
-svn propset svn:ignore ".git
-.gitignore" "$SVNPATH/trunk/"
+echo "Remove git stuff from svd repo"
+rm -Rf $SVNPATH/trunk/.git
+rm -Rf $SVNPATH/trunk/.gitignore
 
 echo "Changing directory to SVN and committing to trunk"
 cd $SVNPATH/trunk/
-# Add all new files that are not set to be ignored
-svn status | grep -v "^.[ \t]*\..*" | grep "^?" | awk '{print $2}' | xargs svn add
+# Delete what is missing:
+svn delete $( svn status | sed -e '/^!/!d' -e 's/^!//' )
+# Add all that is there:
+svn add . --force
+# commit it:
 svn commit --username=$SVNUSER -m "$COMMITMSG"
 
 echo "Creating new SVN tag & committing it"
