@@ -25,6 +25,7 @@ class StopXmlRpcAttackTest extends WP_UnitTestCase {
 
 	function testWritingToHtaccessAndThenRemovingFromHtaccess() {
 		global $plugin_stop_xmlrpc_attack;
+		if (!file_exists($plugin_stop_xmlrpc_attack->htaccessFile)) touch($plugin_stop_xmlrpc_attack->htaccessFile);
 		add_filter('stop_xmlrpc_attack_whitelist_arin_organizations', array($this, 'returnEmptyArrayFilter'));
 		do_action( 'stop_xmlrpc_attack_remove_htaccess' );
 		$data = file_get_contents($plugin_stop_xmlrpc_attack->htaccessFile);
