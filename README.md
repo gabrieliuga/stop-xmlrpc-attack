@@ -1,7 +1,6 @@
 # Stop XML-RPC Attack #
 
 **Contributors:** alfreddatakillen  
-**Donate link:** http://www.nurd.nu/  
 **Tags:** xmlrpc, ddos, dos, jetpack  
 **Requires at least:** 4.0  
 **Tested up to:** 4.1  
@@ -26,6 +25,16 @@ Make sure your .htaccess file is writable by the web server. Then just install t
 ### I can not find the plugin's admin page. ###
 
 In multisite environments, it is in your network admin. You have to be super admin to access it.
+
+### Where do I report bugs, or express my concerns? ###
+
+At [the GitHub issue tracker](https://github.com/alfreddatakillen/stop_xmlrpc_attack/issues "the GitHub issue tracker").
+
+### Where do I contribute with code, bug fixes, etc.? ###
+
+At [GitHub](https://github.com/alfreddatakillen/stop_xmlrpc_attack "GitHub").
+
+And, plz, use tabs for indenting! :)
 
 ## Screenshots ##
 
