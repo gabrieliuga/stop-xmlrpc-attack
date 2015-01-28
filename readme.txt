@@ -28,11 +28,11 @@ In multisite environments, it is in your network admin. You have to be super adm
 
 = Where do I report bugs, or express my concerns? =
 
-At [the GitHub issue tracker](https://github.com/alfreddatakillen/stop_xmlrpc_attack/issues "the GitHub issue tracker").
+At [the GitHub issue tracker](https://github.com/alfreddatakillen/stop-xmlrpc-attack/issues "the GitHub issue tracker").
 
 = Where do I contribute with code, bug fixes, etc.? =
 
-At [GitHub](https://github.com/alfreddatakillen/stop_xmlrpc_attack "GitHub").
+At [GitHub](https://github.com/alfreddatakillen/stop-xmlrpc-attack "GitHub").
 
 And, plz, use tabs for indenting! :)
 

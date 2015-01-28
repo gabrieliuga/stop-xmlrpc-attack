@@ -1,7 +1,7 @@
 <?php
 /**
 Plugin Name: Stop XML-RPC Attack
-Plugin URI: http://wordpress.org/extend/plugins/stop_xmlrpc_attack/
+Plugin URI: http://wordpress.org/extend/plugins/stop-xmlrpc-attack/
 Description: Plugin for blocking access to xmlrpc.php.
 Version: 1.0
 Author: alfreddatakillen
@@ -163,7 +163,7 @@ class Plugin_Stop_Xmlrpc_Attack {
 		if (!is_array($data)) {
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, 'http://whois.arin.net/rest/org/' . $organization . '/nets.json');
-			curl_setopt($ch, CURLOPT_USERAGENT, 'stop_xmlrpc_attack - https://github.com/alfreddatakillen/stop_xmlrpc_attack');
+			curl_setopt($ch, CURLOPT_USERAGENT, 'stop-xmlrpc-attack - https://github.com/alfreddatakillen/stop-xmlrpc-attack');
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 			curl_setopt($ch, CURLOPT_TIMEOUT, 5);
