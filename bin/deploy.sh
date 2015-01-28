@@ -48,8 +48,6 @@ if [ "$(cat $MAINFILE | grep ^License: | sed 's/^[^ ]* //')" != "$(cat composer.
 	exit 1;
 fi
 
-exit
-
 # Make sure the plugin URL matches the slug, so nothing is fucked up.
 if [ "$(cat $MAINFILE | grep "Plugin URI: http://wordpress.org/extend/plugins/$PLUGINSLUG/")" = "" ]; then
 	echo "The plugin URI in $MAINFILE does not match the plugin slug.";
@@ -80,8 +78,6 @@ if git show-ref --tags --quiet --verify -- "refs/tags/$NEWVERSION1"
 	else
 		echo "Git version does not exist. Let's proceed..."
 fi
-
-exit
 
 cd $GITPATH
 echo -e "Enter a commit message for this new version: \c"
