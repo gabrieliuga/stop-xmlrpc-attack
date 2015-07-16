@@ -24,6 +24,7 @@ class Plugin_Stop_Xmlrpc_Attack {
 */
 
 	public $htaccessFile;
+	private $errorDocument;
 	private $beginHtaccessBlock = '# BEGIN WORDPRESS PLUGIN stop_xmlrpc_attack';
 	private $endHtaccessBlock = '# END WORDPRESS PLUGIN stop_xmlrpc_attack';
 
@@ -44,6 +45,7 @@ class Plugin_Stop_Xmlrpc_Attack {
 
 	function init() {
 		$this->htaccessFile = rtrim(ABSPATH, '/') . '/.htaccess';
+		$this->errorDocument = rtrim(ABSPATH, '/') . DIRECTORY_SEPARATOR .  'error403.php';
 		$this->beginHtaccessBlock = apply_filters('stop_xmlrpc_attack_begin_block', $this->beginHtaccessBlock);
 		$this->endHtaccessBlock = apply_filters('stop_xmlrpc_attack_end_block', $this->endHtaccessBlock);
 	}
@@ -275,6 +277,11 @@ class Plugin_Stop_Xmlrpc_Attack {
 
 		$newHtaccessBlock = trim(apply_filters('stop_xmlrpc_attack_htaccess_block', $newHtaccessBlock));
 
+		if($this->create403ErrorDocument()){
+			$newHtaccessBlock.="\n";
+			$newHtaccessBlock.="ErrorDocument 403 /error403.php";
+		}
+
 		// Overwrite .htaccess if old and new block does not match.
 		if ($newHtaccessBlock !== $oldHtaccessBlock) {
 			$newHtaccess = $htaccess['before'] . $this->beginHtaccessBlock . "\n" . $newHtaccessBlock . "\n" . $this->endHtaccessBlock . "\n" . $htaccess['after'] . "\n";
@@ -341,6 +348,7 @@ class Plugin_Stop_Xmlrpc_Attack {
 		$bits1 = str_pad(decbin(ip2long($start)), 32, '0', STR_PAD_LEFT);
 		$cidr = pow(2, (32 - substr(strstr($cidr, '/'), 1))) - 1;
 		$bits2 = str_pad(decbin($cidr), 32, '0', STR_PAD_LEFT);
+		$end='';
 		for ($i = 0; $i < 32; $i++) {
 			if ($bits1[$i] == $bits2[$i]) {
 				$end .= $bits1[$i];
@@ -353,6 +361,21 @@ class Plugin_Stop_Xmlrpc_Attack {
 			}
 		}
 		return array($start, long2ip(bindec($end)));
+	}
+
+	public function create403ErrorDocument(){
+		$content = '<?php die("Error 403");';
+		if(!is_file($this->errorDocument)){
+			$fp = fopen($this->errorDocument, 'w+');
+			if($fp){
+				fwrite($fp, $content);
+				fclose($fp);
+				return true;
+			}
+		} else {
+			return true;
+		}
+		return false;
 	}
 
 }
